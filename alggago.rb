@@ -63,8 +63,10 @@ class Alggago < Gosu::Window
     end
     @players.clear
 
+    is_nam = true
+
     PLAYER_COLOR.each do |player_color|
-      player = Player.new(player_color, NUM_STONES)
+      player = Player.new(player_color, NUM_STONES, is_nam)
       player.stones.each do |stone|
         @space.add_body(stone.body)
         @space.add_shape(stone.shape)
@@ -273,14 +275,14 @@ end
 class Player
   attr_reader :stones, :color
   attr_accessor :player_name, :ai_flag, :number_of_stones
-  def initialize(color, num)
+  def initialize(color, num, is_nam)
     @stones = Array.new
     @color = color
     @player_name = "사람_#{Array.new(6){rand(10)}.join}"
     @ai_flag = false
     @number_of_stones = NUM_STONES
 
-    num.times { @stones << Stone.new(@color) }
+    num.times { @stones << Stone.new(@color, is_nam) }
   end
   
   def draw
@@ -303,7 +305,7 @@ end
 class Stone
   attr_reader :body, :shape 
   attr_accessor :should_delete
-  def initialize(color)
+  def initialize(color, is_nam)
     @should_delete = false
     @body = CP::Body.new(1, CP::moment_for_circle(1.0, 0, 1, CP::Vec2.new(0, 0))) 
     
@@ -317,7 +319,7 @@ class Stone
     @shape.u = STONE_FRICTION
 
     @stone_body = Gosu::Image.new("media/#{color}_stone.png")
-    @logo_body = Gosu::Image.new("media/likelion_logo.png")
+    @logo_body = if is_nam then Gosu::Image.new("media/nam.png") else Gosu::Image.new("media/likelion_logo.png") end
   end
 
   def update
