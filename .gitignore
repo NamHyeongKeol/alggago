@@ -10,3 +10,9 @@ backup*.rb
 *.swp
 black.rb
 white.rb
+ai_*_160716.rb
+ai_*_160723.rb
+ai_*_160730.rb
+ai_*_160806.rb
+ai_*_160813.rb
+ai_*_160820.rb
