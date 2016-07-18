@@ -144,6 +144,14 @@ class Alggago < Gosu::Window
         @winner = if player.color == "white" then "black" else "white" end
       end
     end
+
+    #if @can_throw
+    #  my_position = @players[0].stones.map {|s| [s.body.p.x, s.body.p.y]}
+    #  opposite_position = @players[1].stones.map {|s| [s.body.p.x, s.body.p.y]}
+    # 
+    #  puts my_position.each_with_index.map{|x,i| puts "#{i} x " + x.first.to_s + ", y " + x.last.to_s}
+    #  puts opposite_position.each_with_index.map{|x,i| puts "#{i} x " + x.first.to_s + ", y " + x.last.to_s}
+    #end
   end
 
   def draw
@@ -206,9 +214,10 @@ class Alggago < Gosu::Window
       puts "\n[BEGIN] MESSAGE FROM AI"
       puts message
       puts "[END] MESSAGE FROM AI\n"
-
+      
       reduced_x, reduced_y = reduce_speed(x_strength, y_strength)
       @player_turn.stones[number].body.v = CP::Vec2.new(reduced_x, reduced_y)
+
       pass_turn
     end
   end
@@ -282,7 +291,9 @@ class Player
     @ai_flag = false
     @number_of_stones = NUM_STONES
 
-    num.times { @stones << Stone.new(@color, is_nam) }
+    num.times do |i|
+      @stones << Stone.new(@color, is_nam, i)
+    end
   end
   
   def draw
@@ -305,7 +316,7 @@ end
 class Stone
   attr_reader :body, :shape 
   attr_accessor :should_delete
-  def initialize(color, is_nam)
+  def initialize(color, is_nam, index)
     @should_delete = false
     @body = CP::Body.new(1, CP::moment_for_circle(1.0, 0, 1, CP::Vec2.new(0, 0))) 
     
@@ -320,6 +331,7 @@ class Stone
 
     @stone_body = Gosu::Image.new("media/#{color}_stone.png")
     @logo_body = if is_nam then Gosu::Image.new("media/nam.png") else Gosu::Image.new("media/likelion_logo.png") end
+    puts index.to_s + " x " + @body.p.x.to_s + ", y " + @body.p.y.to_s
   end
 
   def update
